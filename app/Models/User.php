@@ -21,8 +21,10 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'phone',
         'email',
         'password',
+        'user_status',
     ];
 
     /**
@@ -43,4 +45,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function getRedirectRoute()
+    {
+        return match((int)$this->role_id) {
+            1 => 'admin.dashboard',
+            2 => 'user_template.userpendingorders',
+            3 => 'user_template.free_user_page',
+
+        };
+    }
 }

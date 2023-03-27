@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,26 +17,67 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
+        // return view('profile.edit', [
+        //     'user' => $request->user(),
+        // ]);
+
+        return view('admin.admin_profile', [
             'user' => $request->user(),
         ]);
+
     }
+
+    public function PassUpdate(Request $request): View
+    {
+        // return view('profile.edit', [
+        //     'user' => $request->user(),
+        // ]);
+
+        return view('admin.admin_profile_pass_update', [
+            'user' => $request->user(),
+        ]);
+
+    }
+
+    
 
     /**
      * Update the user's profile information.
      */
+
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
-        }
+        }  
+         $request->user()->save();
 
-        $request->user()->save();
+        return Redirect::route('profile.edit')->with('status', 'Profile information updated successfully!');
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
+
+   
+
+    // public function update(Request $request){
+    //     $user_id = Auth::id();
+    //     if ($request->user()->isDirty('email')) {
+    //         $request->user()->email_verified_at = null;
+    //     }       
+    //     $request->validate([
+    //         'name' => 'required',
+    //         'phone' => 'required',
+    //         'email' => 'required',
+    //     ]);
+    //     User::findOrFail($user_id)->update([
+    //         'name' => $request->name,
+    //         'phone' => $request->phone,
+    //         'email' => $request->email,
+
+    //     ]);
+    //     return Redirect::route('profile.edit')->with('status', 'profile-updated');
+    // }
 
     /**
      * Delete the user's account.

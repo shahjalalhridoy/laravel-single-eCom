@@ -7,11 +7,11 @@ All Products | eCom
       <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Products/</span> All Products</h4>
       <div class="card">
                 <h5 class="card-header">All Products Information</h5>
-                @if (session()->has('message'))
+                {{-- @if (session()->has('message'))
                 <div class="alert alert-success">
                     {{ session()->get('message') }}
                 </div>
-            @endif
+            @endif --}}
                 <div class="table-responsive text-nowrap">
                   <table class="table">
                     <thead class="table-light">
@@ -118,6 +118,16 @@ All Products | eCom
                 </div>
               </div>
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+@if (session()->has('message'))
+    <script>
+        swal("Congratulation!", "{!! session()->get('message') !!}", "success", {
+            button: "Ok"
+        });
+    </script>
+@endif
 @endsection
 
 

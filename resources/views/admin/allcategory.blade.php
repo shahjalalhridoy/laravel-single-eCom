@@ -7,11 +7,11 @@
         <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Category/</span> All Categories</h4>
         <div class="card">
             <h5 class="card-header">All Categories Information</h5>
-            @if (session()->has('message'))
+            {{-- @if (session()->has('message'))
                 <div class="alert alert-success">
                     {{ session()->get('message') }}
                 </div>
-            @endif
+            @endif --}}
             <div class="table-responsive text-nowrap">
                 <table class="table">
                     <thead class="table-light">
@@ -39,7 +39,8 @@
                                 </td>
                                 <td>
                                     <a href="{{ route('editcategory', $category->id) }}" class="btn btn-primary">Edit</a>
-                                    <a href="{{ route('deletecategory', $category->id) }}" class="btn btn-warning">Delete</a>
+                                    <a href="{{ route('deletecategory', $category->id) }}"
+                                        class="btn btn-warning">Delete</a>
                                 </td>
                             </tr>
                         @endforeach
@@ -51,4 +52,13 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    @if (session()->has('message'))
+        <script>
+            swal("Congratulation!", "{!! session()->get('message') !!}", "success", {
+                button: "Ok"
+            });
+        </script>
+    @endif
 @endsection

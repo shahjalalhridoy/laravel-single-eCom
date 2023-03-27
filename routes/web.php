@@ -5,9 +5,12 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\FreeUserController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -64,13 +67,18 @@ Route::middleware('auth', 'role:user')->group(function () {
         Route::post('/place-order', 'PlaceOrder')->name('placeorder');
 
         
-
-
-
-        
     
     });
 });
+
+Route::middleware('auth', 'role:free_user')->group(function () {
+    Route::controller(FreeUserController::class)->group(function () {       
+        Route::get('/free-user-page', 'FreeUserPage')->name('freeuserpage');       
+    
+    });
+});
+
+
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -78,10 +86,13 @@ Route::middleware('auth', 'role:user')->group(function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
+    
 })->middleware(['auth', 'role:user', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/password-update', [ProfileController::class, 'PassUpdate'])->name('profile.passupdate');
+
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
@@ -92,6 +103,17 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth', 'role:admin')->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('/admin/dashboard', 'Index')->name('admindashboard');
+    });
+});
+
+Route::middleware('auth', 'role:admin')->group(function () {
+    Route::controller(UserManagementController::class)->group(function () {
+        Route::get('/admin/all-user-list', 'AllUserList')->name('alluserlist');
+        Route::get('/admin/add-user', 'AddUser')->name('adduser');
+        Route::post('/admin/user-status-active', 'UserStatusActive')->name('userstatusactive');
+        Route::post('/admin/user-status-deactive', 'UserStatusDeactive')->name('userstatusdeactive');
+        
+
     });
 });
 
@@ -148,5 +170,14 @@ Route::middleware('auth', 'role:admin')->group(function () {
 
     });
 });
+
+
+
+Route::get('students', [StudentController::class, 'index'])->name('AjaxDataTable');
+Route::get('students/list', [StudentController::class, 'getStudents'])->name('students.list');
+Route::get('students/all-data', [StudentController::class, 'WithOutDataTable'])->name('WithOutDataTable');
+Route::get('/students/pdf', [StudentController::class, 'createPDF']);
+Route::get('/students/generate-pdf', [StudentController::class, 'generatePDF']);
+
 
 require __DIR__ . '/auth.php';
